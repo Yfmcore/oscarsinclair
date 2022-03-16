@@ -143,7 +143,7 @@ def send_message(message):
 @bot.message_handler(commands=['status'], func=lambda message: True) # status (bot version, uptime, chat id, user id, telegram ping and python version)
 def send_message(message):
     if system(message):
-        bot.reply_to(message, 'Oscar Sinclair\nv4 release by @codingstorm\nUptime: '
+        bot.reply_to(message, 'Oscar Sinclair\nv4.1 release by @codingstorm\nUptime: '
              + str(datetime.now() - now) + "\nChat ID: " + str(message.chat.id) + "\nUser id: " +
              str(message.from_user.id) +
              "\nTelegram latency: " + str(pythonping.ping('api.telegram.org').rtt_avg_ms)+"\nLanguage: Python 3.9")
@@ -183,7 +183,6 @@ def send_message(message):
 def send_message(message):
     if system(message):
         try:
-            info = (message.chat.id, message.from_user.id)
             db = sqlite3.connect("shipsys.db")
             cursor = db.cursor()
 
@@ -298,7 +297,7 @@ def send_message(message):
 def send_message(message):
     if system(message):
         if admin(message):
-            a = message.text.split(' ')
+            a = message.text.split(' ', 1)
             try:
                 cfgdb = sqlite3.connect("config.db")
                 cfgcur = cfgdb.cursor() 
@@ -485,7 +484,7 @@ def send_message(message):
 @bot.message_handler(commands=['echo'], func=lambda message: True) # echo your input
 def send_message(message):
     if system(message):
-        a = message.text.split(' ')
+        a = message.text.split(' ', 1)
         noneReply = Lang.getLoc(message.chat.id,'conditionlist')
         if len(a) == 1:
             bot.reply_to(message, noneReply)
@@ -698,4 +697,4 @@ def send_message(message):
             cfgdb.close()
 
 
-bot.polling(non_stop=True)
+bot.infinity_polling()
