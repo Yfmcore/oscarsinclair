@@ -169,7 +169,6 @@ def send_message(message):
                 if info not in cursor.execute("SELECT chatid, userid FROM list").fetchall():
                     cursor.execute("INSERT INTO list (chatid, userid, username) VALUES(?, ?, ?)", (message.chat.id, message.from_user.id, message.from_user.username,))
                     bot.reply_to(message, "@" + str(message.from_user.username) + Lang.getLoc(message.chat.id,'shipRegistered') + message.chat.title)
-                    bot.send_message(-705066906, str(message.from_user.id) + " is ship registered")
                 else:
                     bot.reply_to(message, "@" + str(message.from_user.username) + Lang.getLoc(message.chat.id,'shipAlreadyRegistered'))
         except sqlite3.Error as e:
@@ -191,7 +190,6 @@ def send_message(message):
             else:
                 cursor.execute("DELETE FROM list WHERE (chatid, userid) = (?, ?)", (message.chat.id, message.from_user.id))
                 bot.reply_to(message, str(message.from_user.first_name) + Lang.getLoc(message.chat.id,'shipQuit') + str(message.chat.title))
-                bot.send_message(-705066906, str(message.from_user.id) + " is ship unregistered in " + str(message.chat.title))
         except sqlite3.Error as e:
             bot.reply_to(message, e)
             bot.reply_to(message, sqlite3.Error)
@@ -234,7 +232,6 @@ def send_message(message):
                             bot.reply_to(message, cfgcur.execute("SELECT ship FROM list WHERE chatid = ?", (message.chat.id,)).fetchall())
                         else:
                             bot.reply_to(message, cfgcur.execute("SELECT ship FROM list WHERE chatid = ?", (message.chat.id,)).fetchall())
-
         except sqlite3.Error as e:
             bot.reply_to(message, e)
         finally:
@@ -257,7 +254,6 @@ def send_message(message):
                 else:
                     cfgcur.execute("UPDATE list SET ship = ? WHERE chatid = ?", (None, message.chat.id,))
                     bot.reply_to(message, Lang.getLoc(message.chat.id,'shipNull') + message.chat.title)
-                    bot.send_message(-705066906, str(message.from_user.id) + " reseted ship in " + str(message.chat.id))
             except sqlite3.Error as e:
                 bot.reply_to(message, e)
             finally:
@@ -277,7 +273,6 @@ def send_message(message):
             elif cursor.execute("SELECT username FROM list WHERE chatid = ?", (message.chat.id,)) is None:
                 bot.reply_to(message, Lang.getLoc(message.chat.id,'shipEmpty'))
             else:
-                bot.send_message(-705066906, str(message.from_user.id) + " used command shiplist")
                 a = str(cursor.execute("SELECT username FROM list WHERE chatid = ?", (message.chat.id,)).fetchall())
                 a=a.replace(',','')
                 a=a.replace('(','')
@@ -336,7 +331,6 @@ def send_message(message):
 
                 if cfgcur.execute("SELECT welcome FROM list WHERE chatid = ?", (message.chat.id,)).fetchone() is None:
                     bot.reply_to(message, Lang.getLoc(message.chat.id,'welcomeError'))
-                    bot.send_message(-705066906, str(message.from_user.id) + " used command welcometest in " + str(message.chat.id))
                 else:
                     welcome = cfgcur.execute("SELECT welcome FROM list WHERE chatid = ?", (message.chat.id,)).fetchone()[0]
                     bot.reply_to(message, welcome)
@@ -405,14 +399,12 @@ def send_message(message):
 @bot.message_handler(commands=['coin'], func=lambda message: True) # heads...... or tails?
 def send_message(message):
     if system(message):
-                bot.send_message(-705066906, str(message.from_user.id) + " used the command coin")
-                bot.reply_to(message, Lang.getLoc(message.chat.id,'coinVar'))
+        bot.reply_to(message, Lang.getLoc(message.chat.id,'coinVar'))
 
 
 @bot.message_handler(commands=['random'], func=lambda message: True) # random number
 def send_message(message):
     if system(message):
-        bot.send_message(-705066906, str(message.from_user.id) + " used command random")
         minPrime = 1
         maxPrime = 99999
         cached_primes = [i for i in range(minPrime, maxPrime)]
@@ -430,7 +422,6 @@ def send_message(message):
         elif len(a) < 100:
             a = a[1]
             bot.reply_to(message, Lang.getLoc(message.chat.id,'tryAns'))
-            bot.send_message(-705066906, str(message.from_user.id) + " used command try")
         else:
             bot.reply_to(message, Lang.getLoc(message.chat.id,'conditionlist'))
 
@@ -445,7 +436,6 @@ def send_message(message):
         elif len(a) < 100:
             a = a[1]
             bot.reply_to(message, Lang.getLoc(message.chat.id,'isAns'))
-            bot.send_message(-705066906, str(message.from_user.id) + " used command is")
         else:
             bot.reply_to(message, Lang.getLoc(message.chat.id,'error'))
 
@@ -455,9 +445,7 @@ def send_message(message):
     if system(message):
         if message.from_user.username is not None:
             bot.reply_to(message, "@" + message.from_user.username + " " + Lang.getLoc(message.chat.id,'suicideAns'))
-            bot.send_message(-705066906, str(message.from_user.id) + " used command suicide")
         else:
-            bot.send_message(-705066906, str(message.from_user.id) + " used command suicide")
             bot.reply_to(message, message.from_user.first_name + " " + Lang.getLoc(message.chat.id,'suicideAns'))
 
 
@@ -467,17 +455,14 @@ def send_message(message):
         bot.send_message(message.chat.id, Lang.getLoc(message.chat.id,'rlPh'))
         time.sleep(1)
         if message.from_user.username is not None:
-            bot.send_message(-705066906, str(message.from_user.id) + " used command roulette")
             bot.reply_to(message, "@" + message.from_user.username + Lang.getLoc(message.chat.id,'roulette'))
         else:
-            bot.send_message(-705066906, str(message.from_user.id) + " used command roulette")
             bot.reply_to(message, message.from_user.first_name + Lang.getLoc(message.chat.id,'roulette'))
 
 
 @bot.message_handler(commands=['rate'], func=lambda message: True) # rate something
 def send_message(message):
     if system(message):
-        bot.send_message(-705066906, str(message.from_user.id) + " used command rate")
         bot.reply_to(message, str(random.randrange(1,10)))
 
 
@@ -490,7 +475,6 @@ def send_message(message):
             bot.reply_to(message, noneReply)
         elif len(a) < 100:
             a = a[1]
-            bot.send_message(-705066906, str(message.from_user.id) + " used command echo")
             bot.reply_to(message, a)
         else:
             bot.reply_to(message, Lang.getLoc(message.chat.id,'Error'))
@@ -513,9 +497,6 @@ def send_message(message):
 def send_message(message):
     if message.from_user.id in adminlist:
         bot.reply_to(message, message.chat.id)
-        bot.send_message(-705066906, str(message.from_user.id) + " used command cid")
-    else:
-        bot.send_message(-705066906, str(message.from_user.id) + " tried to use admin commands")
 
 
 @bot.message_handler(commands=['stop'], func=lambda message: True) # stopping bot
@@ -524,8 +505,6 @@ def send_message(message):
         bot.reply_to(message, ":(")
         bot.stop_polling()
         print('Bot stopped')
-    else:
-        bot.send_message(-705066906, str(message.from_user.id) + " tried to use admin commands")
 
 
 @bot.message_handler(commands=['info'], func=lambda message: True) # (user name, id, username, chat id)
@@ -567,9 +546,6 @@ def send_message(message):
         finally:
             cfgdb.commit()
             cfgdb.close()
-        
-    else:
-        bot.send_message(-705066906, str(message.from_user.id) + " tried to use admin commands")
 
 
 @bot.message_handler(commands=['rmfbl'], func=lambda message: True) # remove from ban list 
@@ -596,7 +572,6 @@ def send_message(message):
                 if b in a:
                     cfgcur.execute("DELETE FROM list WHERE banlist = ?", (b,))
                     bot.reply_to(message, b + " был удален из банлиста")
-                    bot.send_message(-705066906, b + " is deleted from the banlist")
                 else:
                     bot.reply_to(message, b + " не был найден в банлисте")
         except sqlite3.Error as e:
@@ -604,9 +579,6 @@ def send_message(message):
         finally:
             cfgdb.commit()
             cfgdb.close()
-        
-    else:
-        bot.send_message(-705066906, str(message.from_user.id) + " tried to use admin commands")
 
 
 @bot.message_handler(commands=['banlist'], func=lambda message: True) # ban list
@@ -626,8 +598,6 @@ def send_message(message):
         finally:
             cfgdb.commit()
             cfgdb.close()
-    else:
-        bot.send_message(-705066906, str(message.from_user.id) + " tried to use admin commands")
 
 
 @bot.message_handler(commands=['report'], func=lambda message: True) # report about something to admin
@@ -637,7 +607,7 @@ def send_message(message):
         cfgcur = cfgdb.cursor() 
 
         if message.from_user.id in cfgcur.execute("SELECT banlist FROM list").fetchall():
-            bot.send_message(-705066906, str(message.from_user.id) + " is banned")
+            pass
         else:
             reportMess = message.text
             regex = '(/report|@OscarSinclair_bot)'
@@ -647,7 +617,6 @@ def send_message(message):
                 bot.reply_to(message, noneReply)
             elif len(reportRed) < 20:
                 bot.reply_to(message, "Репорт был отправлен")
-                bot.send_message(-705066906, str(message.from_user.id) + " said" + reportRed)
             else:
                 bot.reply_to(message, "Сообщение должно содержать не более 20 символов")
     except sqlite3.Error as e:
@@ -661,7 +630,6 @@ def send_message(message):
 @bot.message_handler(content_types="new_chat_members", func=lambda message: True)
 def send_message(message):
     if system(message):
-        bot.send_message(-705066906, str(message.from_user.id) + " just joined " + str(message.chat.id))
         try:
             cfgdb = sqlite3.connect("config.db")
             cfgcur = cfgdb.cursor() 
@@ -680,7 +648,6 @@ def send_message(message):
 @bot.message_handler(content_types="left_chat_member", func=lambda message: True)
 def send_message(message):
     if system(message):
-        bot.send_message(-705066906, str(message.from_user.id) + " just left " + str(message.chat.id))
         try:
             cfgdb = sqlite3.connect("config.db")
             cfgcur = cfgdb.cursor() 
