@@ -460,6 +460,12 @@ def send_message(message):
             bot.reply_to(message, message.from_user.first_name + Lang.getLoc(message.chat.id,'roulette'))
 
 
+@bot.message_handler(commands=['cube'], func=lambda message: True) # rate something
+def send_message(message):
+    if system(message):
+        bot.reply_to(message, str(random.randrange(1,6)))
+
+
 @bot.message_handler(commands=['rate'], func=lambda message: True) # rate something
 def send_message(message):
     if system(message):
